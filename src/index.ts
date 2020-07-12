@@ -45,12 +45,12 @@ discordClient.on("message", (msg: Message) => {
   if (msg.channel.id === process.env.DISCORD_CHANNEL_ID) {
     let attachment = "";
     if (msg.author.id !== process.env.DISCORD_USER_ID) {
-      if (msg.attachments) {
+      if (msg.attachments.first()) {
         const name = msg.attachments.first()?.name;
         const url = msg.attachments.first()?.url;
 
         // markdown formatted link
-        attachment = `[${name || url}](${url})`;
+        attachment = ` [${name || url}](${url})`;
       }
 
       vexClient.messages.send(
