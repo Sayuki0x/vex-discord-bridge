@@ -1275,10 +1275,10 @@ knex@^0.21.1:
     uuid "^7.0.3"
     v8flags "^3.1.3"
 
-libvex@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/libvex/-/libvex-2.4.2.tgz#85e125c947815780b679e6f2ec2759a8583d487c"
-  integrity sha512-bddMiKZxhKuD4XWwaasKqVfoKZ5tV9eThOpDZAGzInm0S9sNbFDWZHGtYU9pEdypldxubV/UwBXXKzscQrF9XQ==
+libvex@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/libvex/-/libvex-2.4.3.tgz#8added2a9b86380123e35832a858814cc07c35dd"
+  integrity sha512-hjwsuDMFOeAaEf14uqzM7KuzhT+qUpX2q4cLKGTsOUxx16A+wL9AAHadkCSJJ15lFEX/7yI86niRXXAU+So2nw==
   dependencies:
     "@types/node" "^14.0.14"
     "@types/uuid" "^8.0.0"
