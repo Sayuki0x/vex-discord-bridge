@@ -1,26 +1,28 @@
 import { Client as DiscordClient, Message } from 'discord.js';
-import log from 'electron-log';
 import { Client as VexClient, KeyRing } from 'libvex';
 import { loadEnv } from './utils/loadEnv';
 
 loadEnv();
 
 const keyring = new KeyRing('./keys');
-const vexClient = new VexClient('us.vex.chat', keyring, true);
-
-const vexAccount = {
-  hostname: 'us.vex.chat',
-  pubkey: 'a91904f025749069c4962f9b3e86d34974f4462ee31c18ed72e2b98e31927137',
-  serverPubkey:
-    '4a94fea243270f1d89de7dfaf5d165840798d963c056eac08fdc76b293b63411',
-  uuid: '8604c21f-9b98-4503-bb55-cf27779d6b0f',
-};
+const vexClient = new VexClient('dev.vex.chat', keyring, null);
+let bridgeReady = false;
 
 vexClient.on('ready', async () => {
-  await vexClient.auth(vexAccount);
-  vexClient.channels.join(process.env.VEX_CHANNEL_ID!);
+  await vexClient.register();
+  await vexClient.auth();
+});
 
-  console.log('Logged in to vex', vexClient.info());
+vexClient.on('authed', async () => {
+  await vexClient.channels.join(process.env.VEX_CHANNEL_ID!);
+  if (!bridgeReady) {
+    bridgeReady = true;
+    vexClient.emit('bridge-ready');
+  }
+});
+
+vexClient.on('bridge-ready' as any, async () => {
+  // do something
 });
 
 vexClient.on('message', async (message) => {
@@ -31,8 +33,8 @@ vexClient.on('message', async (message) => {
     return;
   }
 
-  if (message.userID !== vexAccount.uuid) {
-    (channel as any).send(message.username + ': ' + message.message);
+  if (message.userID !== vexClient.info().client?.userID) {
+    (channel as any).send('**' + message.username + '**: ' + message.message);
   }
 });
 

@@ -36,7 +36,7 @@
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "electron-log": "^4.1.1",
-    "libvex": "^0.1.0"
+    "libvex": "^2.4.2"
   },
   "repository": "git@github.com:vex-chat/vex-discord-bridge"
 }

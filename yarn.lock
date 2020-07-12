@@ -1275,10 +1275,10 @@ knex@^0.21.1:
     uuid "^7.0.3"
     v8flags "^3.1.3"
 
-libvex@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/libvex/-/libvex-0.1.0.tgz#5fefae5e08d25f9cbe8e7d3ff3b3f53954da9cd5"
-  integrity sha512-rX3W7mRv4BNXGD2vFTjK0SjSnrPv2UXr4NK7hRT6x1oCr8wi6qzQy3uQsGCcJZX3JMpwMAQGbtrYMlp7KVz3Vw==
+libvex@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/libvex/-/libvex-2.4.2.tgz#85e125c947815780b679e6f2ec2759a8583d487c"
+  integrity sha512-bddMiKZxhKuD4XWwaasKqVfoKZ5tV9eThOpDZAGzInm0S9sNbFDWZHGtYU9pEdypldxubV/UwBXXKzscQrF9XQ==
   dependencies:
     "@types/node" "^14.0.14"
     "@types/uuid" "^8.0.0"
@@ -1288,6 +1288,7 @@ libvex@^0.1.0:
     moment "^2.27.0"
     tweetnacl "^1.0.3"
     tweetnacl-util "^0.15.1"
+    typedoc-plugin-no-inherit "^1.1.10"
     uuid "^8.2.0"
     ws "^7.3.0"
 
@@ -2275,6 +2276,11 @@ type-fest@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.6.0.tgz#8d2a2370d3df886eb5c90ada1c5bf6188acf838b"
   integrity sha512-q+MB8nYR1KDLrgr4G5yemftpMC7/QLqVndBmEEdqzmNj5dcFOO4Oo8qlwZE3ULT3+Zim1F8Kq4cBnikNhlCMlg==
+
+typedoc-plugin-no-inherit@^1.1.10:
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-no-inherit/-/typedoc-plugin-no-inherit-1.1.10.tgz#559d2fa68bc5d31052bf058399c2c135f9af2f68"
+  integrity sha512-BhSFAWlBTh9Bf6PSfruIqdQBM8gd/Gj8hVuRk5pVWkHu4I/SB24LzFr5gAo52ZlaQSeN72+VOkkRD6tNYl8Enw==
 
 typescript@^3.7.2:
   version "3.7.2"
