@@ -1,31 +1,26 @@
-import { Client as DiscordClient, Message } from 'discord.js';
-import { Client as VexClient, KeyRing } from 'libvex';
-import { loadEnv } from './utils/loadEnv';
+import { Client as DiscordClient, Message } from "discord.js";
+import { Client as VexClient, KeyRing } from "libvex";
+import { loadEnv } from "./utils/loadEnv";
 
 loadEnv();
 
-const keyring = new KeyRing('./keys');
-const vexClient = new VexClient('dev.vex.chat', keyring, null);
-let bridgeReady = false;
+const keyring = new KeyRing("./keys");
+const vexClient = new VexClient("dev.vex.chat", keyring, null);
 
-vexClient.on('ready', async () => {
-  await vexClient.register();
-  await vexClient.auth();
+vexClient.on("ready", async () => {
+  vexClient.auth();
 });
 
-vexClient.on('authed', async () => {
+vexClient.on("authed", async () => {
+  console.log("great!");
   await vexClient.channels.join(process.env.VEX_CHANNEL_ID!);
-  if (!bridgeReady) {
-    bridgeReady = true;
-    vexClient.emit('bridge-ready');
-  }
 });
 
-vexClient.on('bridge-ready' as any, async () => {
+vexClient.on("bridge-ready" as any, async () => {
   // do something
 });
 
-vexClient.on('message', async (message) => {
+vexClient.on("message", async (message) => {
   const channel = discordClient.channels.cache.get(
     process.env.DISCORD_CHANNEL_ID!
   );
@@ -34,7 +29,7 @@ vexClient.on('message', async (message) => {
   }
 
   if (message.userID !== vexClient.info().client?.userID) {
-    (channel as any).send('**' + message.username + '**: ' + message.message);
+    (channel as any).send("**" + message.username + "**: " + message.message);
   }
 });
 
@@ -42,16 +37,25 @@ const discordClient = new DiscordClient();
 
 discordClient.login(process.env.DISCORD_TOKEN);
 
-discordClient.on('ready', () => {
+discordClient.on("ready", () => {
   console.log(`Logged in as ${discordClient.user!.tag}!`);
 });
 
-discordClient.on('message', (msg: Message) => {
+discordClient.on("message", (msg: Message) => {
   if (msg.channel.id === process.env.DISCORD_CHANNEL_ID) {
+    let attachment = "";
     if (msg.author.id !== process.env.DISCORD_USER_ID) {
+      if (msg.attachments) {
+        const name = msg.attachments.first()?.name;
+        const url = msg.attachments.first()?.url;
+
+        // markdown formatted link
+        attachment = `[${name || url}](${url})`;
+      }
+
       vexClient.messages.send(
         process.env.VEX_CHANNEL_ID!,
-        '**' + msg.author.username + '**:  ' + msg.content
+        "**" + msg.author.username + "**:  " + msg.content + attachment
       );
     }
   }
