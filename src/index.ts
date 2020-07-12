@@ -6,7 +6,7 @@ loadEnv();
 
 const keyring = new KeyRing("./keys");
 const vexClient = new VexClient("dev.vex.chat", keyring, null);
-const username = "BridgeBot";
+const username = "🤖BridgeBot";
 
 vexClient.on("ready", async () => {
   vexClient.auth();
