@@ -6,6 +6,7 @@ loadEnv();
 
 const keyring = new KeyRing("./keys");
 const vexClient = new VexClient("dev.vex.chat", keyring, null);
+const username = "BridgeBot";
 
 vexClient.on("ready", async () => {
   vexClient.auth();
@@ -55,10 +56,12 @@ discordClient.on("message", async (msg: Message) => {
 
       await vexClient.users.nick(msg.author.username);
 
-      vexClient.messages.send(
+      await vexClient.messages.send(
         process.env.VEX_CHANNEL_ID!,
         msg.content + attachment
       );
+
+      await vexClient.users.nick(username);
     }
   }
 });
