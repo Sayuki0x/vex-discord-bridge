@@ -41,7 +41,7 @@ discordClient.on("ready", () => {
   console.log(`Logged in as ${discordClient.user!.tag}!`);
 });
 
-discordClient.on("message", (msg: Message) => {
+discordClient.on("message", async (msg: Message) => {
   if (msg.channel.id === process.env.DISCORD_CHANNEL_ID) {
     let attachment = "";
     if (msg.author.id !== process.env.DISCORD_USER_ID) {
@@ -53,9 +53,11 @@ discordClient.on("message", (msg: Message) => {
         attachment = ` [${name || url}](${url})`;
       }
 
+      await vexClient.users.nick(msg.author.username);
+
       vexClient.messages.send(
         process.env.VEX_CHANNEL_ID!,
-        "**" + msg.author.username + "**:  " + msg.content + attachment
+        msg.content + attachment
       );
     }
   }
