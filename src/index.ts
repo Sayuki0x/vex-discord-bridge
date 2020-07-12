@@ -51,7 +51,7 @@ discordClient.on('message', (msg: Message) => {
     if (msg.author.id !== process.env.DISCORD_USER_ID) {
       vexClient.messages.send(
         process.env.VEX_CHANNEL_ID!,
-        msg.author.username + ':  ' + msg.content
+        '**' + msg.author.username + '**:  ' + msg.content
       );
     }
   }
