@@ -30,7 +30,10 @@ vexClient.on("message", async (message) => {
   }
 
   if (message.userID !== vexClient.info().client?.userID) {
-    (channel as any).send("**" + message.username + "**: " + message.message);
+    await (discordClient as any).user
+      .setUsername("test")(channel as any)
+      .send("**" + message.username + "**: " + message.message);
+    await (discordClient as any).user.setUsername("MarketTalk");
   }
 });
 
