@@ -13,6 +13,8 @@ const keyring = new KeyRing("./keys");
 const vexClient = new VexClient("dev.vex.chat", keyring, null);
 const username = "BridgeBot";
 
+let guildMember: any;
+
 vexClient.on("ready", async () => {
   vexClient.auth();
 });
@@ -30,20 +32,24 @@ vexClient.on("message", async (message) => {
   }
 
   if (message.userID !== vexClient.info().client?.userID) {
-    // for some reason this throws even though it works
-    // const guild: any = await (discordClient as any).guilds.resolve("579913226129637376")
-    // const guildMember: any = await guild.members.resolve((discordClient as any).user.id)
-    // guildMember.setNickname(message.username)
-    (channel as any).send("**" + message.username + "**: " + message.message);
+    // await guildMember.setNickname(message.username);
+    if (channel) {
+      await (channel as any).send(
+        "**" + message.username + "**: " + message.message
+      );
+    }
+    // await guildMember.setNickname("MarketTalk");
   }
 });
 
-const discordClient: any = new DiscordClient();
+const discordClient: DiscordClient = new DiscordClient();
 
 discordClient.login(process.env.DISCORD_TOKEN);
 
 discordClient.on("ready", async () => {
   console.log(`Logged in as ${discordClient.user!.tag}!`);
+  const guild: any = await discordClient.guilds.resolve("579913226129637376");
+  guildMember = await guild.members.resolve((discordClient as any).user.id);
 });
 
 discordClient.on("message", async (msg: Message) => {
