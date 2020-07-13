@@ -1,4 +1,9 @@
-import { Client as DiscordClient, Message } from "discord.js";
+import {
+  Client as DiscordClient,
+  Guild,
+  GuildMember,
+  Message,
+} from "discord.js";
 import { Client as VexClient, KeyRing } from "libvex";
 import { loadEnv } from "./utils/loadEnv";
 
@@ -6,19 +11,14 @@ loadEnv();
 
 const keyring = new KeyRing("./keys");
 const vexClient = new VexClient("dev.vex.chat", keyring, null);
-const username = "🤖BridgeBot";
+const username = "BridgeBot";
 
 vexClient.on("ready", async () => {
   vexClient.auth();
 });
 
 vexClient.on("authed", async () => {
-  console.log("great!");
   await vexClient.channels.join(process.env.VEX_CHANNEL_ID!);
-});
-
-vexClient.on("bridge-ready" as any, async () => {
-  // do something
 });
 
 vexClient.on("message", async (message) => {
@@ -30,15 +30,19 @@ vexClient.on("message", async (message) => {
   }
 
   if (message.userID !== vexClient.info().client?.userID) {
+    // for some reason this throws even though it works
+    // const guild: any = await (discordClient as any).guilds.resolve("579913226129637376")
+    // const guildMember: any = await guild.members.resolve((discordClient as any).user.id)
+    // guildMember.setNickname(message.username)
     (channel as any).send("**" + message.username + "**: " + message.message);
   }
 });
 
-const discordClient = new DiscordClient();
+const discordClient: any = new DiscordClient();
 
 discordClient.login(process.env.DISCORD_TOKEN);
 
-discordClient.on("ready", () => {
+discordClient.on("ready", async () => {
   console.log(`Logged in as ${discordClient.user!.tag}!`);
 });
 
@@ -54,7 +58,11 @@ discordClient.on("message", async (msg: Message) => {
         attachment = ` [${name || url}](${url})`;
       }
 
-      await vexClient.users.nick(msg.author.username);
+      try {
+        await vexClient.users.nick(msg.author.username);
+      } catch (err) {
+        console.warn(err);
+      }
 
       await vexClient.messages.send(
         process.env.VEX_CHANNEL_ID!,
