@@ -14,11 +14,12 @@ const keyring = new KeyRing("./keys");
 const vexClient = new VexClient(process.env.VEX_SERVER!, keyring, null);
 const username = "BridgeBot";
 
-const markdownImageRegex = /!\[.*?\]\((.*?)\)/;
+const markdownImageRegex = /!\[.*?\]\((.*?)\)/g;
 
 let guildMember: any;
 
 vexClient.on("ready", async () => {
+  await vexClient.register();
   vexClient.auth();
 });
 
@@ -27,22 +28,22 @@ vexClient.on("authed", async () => {
 });
 
 function getURLFromMarkdown(markdown: string) {
-  const url = markdown.split("(");
-  return url.slice(0, url.length - 1)[0];
+  const url = markdown.split("(")[1];
+  return url.slice(0, url.length - 1);
 }
 
 vexClient.on("message", async (message) => {
   if (message.message.match(markdownImageRegex)) {
-    console.log("reached");
     const matches = message.message.match(markdownImageRegex);
     if (matches) {
-      for (const match of matches) {
-        console.log(match);
-        match.replace(match, getURLFromMarkdown(match));
-      }
+      console.log(matches[0]);
+      console.log(getURLFromMarkdown(matches[0]));
+      message.message = message.message.replace(
+        matches[0],
+        getURLFromMarkdown(matches[0])
+      );
     }
   }
-  return;
 
   const channel = discordClient.channels.cache.get(
     process.env.DISCORD_CHANNEL_ID!
