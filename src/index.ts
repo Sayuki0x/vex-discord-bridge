@@ -1,7 +1,16 @@
 import ax from "axios";
 import { Client as DiscordClient, Message } from "discord.js";
+import fs from "fs";
 import { Client as VexClient, KeyRing } from "libvex";
 import { loadEnv } from "./utils/loadEnv";
+
+if (!fs.existsSync("./emojis.json")) {
+  fs.writeFileSync("./emojis.json", "{}", { flag: "wx" })
+}
+
+const emojiList = JSON.parse(fs.readFileSync("./emojis.json", { encoding: "utf8" }))
+
+console.log(emojiList);
 
 loadEnv();
 
@@ -27,7 +36,7 @@ function getURLFromMarkdown(markdown: string) {
   return url.slice(0, url.length - 1);
 }
 
-/* vexClient.on("message", async (message) => {
+vexClient.on("message", async (message) => {
   if (message.message.match(markdownImageRegex)) {
     const matches = message.message.match(markdownImageRegex);
     if (matches) {
@@ -54,7 +63,7 @@ function getURLFromMarkdown(markdown: string) {
     }
     // await guildMember.setNickname("MarketTalk");
   }
-}); */
+});
 
 const discordClient: DiscordClient = new DiscordClient();
 
@@ -84,24 +93,29 @@ discordClient.on("message", async (msg: Message) => {
       if (emojiMatches) {
         for (const emojiString of emojiMatches) {
           const [emojiName, emojiID] = getEmojiID(emojiString);
-          console.log(emojiID);
 
-          const emoji = await discordClient.emojis.resolve(emojiID);
+          if (emojiList[emojiName]) {
+            msg.content.replace(emojiString, emojiList[emojiName])
+          } else {
+            const emoji = await discordClient.emojis.resolve(emojiID);
+            if (emoji) {
+              console.log(emoji.url);
+              const res = await ax.get(emoji.url!, {
+                responseType: "arraybuffer",
+              });
+              const fileInfo = await vexClient.files.create(
+                res.data,
+                emojiName,
+                process.env.VEX_CHANNEL_ID!
+              );
 
-          if (emoji) {
-            console.log(emoji.url);
-            const res = await ax.get(emoji.url!, {
-              responseType: "arraybuffer",
-            });
-            const fileInfo = await vexClient.files.create(
-              res.data,
-              emojiName,
-              process.env.VEX_CHANNEL_ID!
-            );
-
-            // markdown formatted link
-            const emojiFile = `![emoji-${emojiName}](${fileInfo.url})`;
-            msg.content = msg.content.replace(emojiString, emojiFile);
+              emojiList[emojiName] = fileInfo.url
+              fs.writeFileSync("./emojis.json", JSON.stringify(emojiList, null, 4))
+  
+              // markdown formatted link
+              const emojiFile = `![emoji-${emojiName}](${fileInfo.url})`;
+              msg.content = msg.content.replace(emojiString, emojiFile);
+            }
           }
         }
       }
