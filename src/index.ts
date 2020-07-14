@@ -5,10 +5,12 @@ import { Client as VexClient, KeyRing } from "libvex";
 import { loadEnv } from "./utils/loadEnv";
 
 if (!fs.existsSync("./emojis.json")) {
-  fs.writeFileSync("./emojis.json", "{}", { flag: "wx" })
+  fs.writeFileSync("./emojis.json", "{}", { flag: "wx" });
 }
 
-const emojiList = JSON.parse(fs.readFileSync("./emojis.json", { encoding: "utf8" }))
+const emojiList = JSON.parse(
+  fs.readFileSync("./emojis.json", { encoding: "utf8" })
+);
 
 console.log(emojiList);
 
@@ -95,7 +97,10 @@ discordClient.on("message", async (msg: Message) => {
           const [emojiName, emojiID] = getEmojiID(emojiString);
 
           if (emojiList[emojiName]) {
-            msg.content.replace(emojiString, emojiList[emojiName])
+            msg.content = msg.content.replace(
+              emojiString,
+              `![emoji-${emojiName}](${emojiList[emojiName]})`
+            );
           } else {
             const emoji = await discordClient.emojis.resolve(emojiID);
             if (emoji) {
@@ -109,9 +114,12 @@ discordClient.on("message", async (msg: Message) => {
                 process.env.VEX_CHANNEL_ID!
               );
 
-              emojiList[emojiName] = fileInfo.url
-              fs.writeFileSync("./emojis.json", JSON.stringify(emojiList, null, 4))
-  
+              emojiList[emojiName] = fileInfo.url;
+              fs.writeFileSync(
+                "./emojis.json",
+                JSON.stringify(emojiList, null, 4)
+              );
+
               // markdown formatted link
               const emojiFile = `![emoji-${emojiName}](${fileInfo.url})`;
               msg.content = msg.content.replace(emojiString, emojiFile);
