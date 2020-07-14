@@ -100,7 +100,7 @@ discordClient.on("message", async (msg: Message) => {
             );
 
             // markdown formatted link
-            const emojiFile = `![${fileInfo.url}](${fileInfo.url})`;
+            const emojiFile = `![emoji-${emojiName}](${fileInfo.url})`;
             msg.content = msg.content.replace(emojiString, emojiFile);
           }
         }
