@@ -3,6 +3,7 @@ import {
   Guild,
   GuildMember,
   Message,
+  MessageFlags,
 } from "discord.js";
 import { Client as VexClient, KeyRing } from "libvex";
 import { loadEnv } from "./utils/loadEnv";
@@ -10,8 +11,10 @@ import { loadEnv } from "./utils/loadEnv";
 loadEnv();
 
 const keyring = new KeyRing("./keys");
-const vexClient = new VexClient("dev.vex.chat", keyring, null);
+const vexClient = new VexClient(process.env.VEX_SERVER!, keyring, null);
 const username = "BridgeBot";
+
+const markdownImageRegex = /!\[.*?\]\((.*?)\)/;
 
 let guildMember: any;
 
@@ -20,10 +23,27 @@ vexClient.on("ready", async () => {
 });
 
 vexClient.on("authed", async () => {
-  await vexClient.channels.join(process.env.VEX_CHANNEL_ID!);
+  vexClient.channels.join(process.env.VEX_CHANNEL_ID!);
 });
 
+function getURLFromMarkdown(markdown: string) {
+  const url = markdown.split("(");
+  return url.slice(0, url.length - 1)[0];
+}
+
 vexClient.on("message", async (message) => {
+  if (message.message.match(markdownImageRegex)) {
+    console.log("reached");
+    const matches = message.message.match(markdownImageRegex);
+    if (matches) {
+      for (const match of matches) {
+        console.log(match);
+        match.replace(match, getURLFromMarkdown(match));
+      }
+    }
+  }
+  return;
+
   const channel = discordClient.channels.cache.get(
     process.env.DISCORD_CHANNEL_ID!
   );
@@ -44,7 +64,7 @@ vexClient.on("message", async (message) => {
 
 const discordClient: DiscordClient = new DiscordClient();
 
-discordClient.login(process.env.DISCORD_TOKEN);
+// discordClient.login(process.env.DISCORD_TOKEN);
 
 discordClient.on("ready", async () => {
   console.log(`Logged in as ${discordClient.user!.tag}!`);
