@@ -93,7 +93,7 @@ discordClient.on("message", async (msg: Message) => {
 
       await vexClient.messages.send(
         process.env.VEX_CHANNEL_ID!,
-        msg.content + attachment
+        msg.content + (attachment ? "\n" + attachment : "")
       );
 
       await vexClient.users.nick(username);
