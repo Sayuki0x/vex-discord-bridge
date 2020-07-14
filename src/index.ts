@@ -65,7 +65,7 @@ vexClient.on("message", async (message) => {
 
 const discordClient: DiscordClient = new DiscordClient();
 
-// discordClient.login(process.env.DISCORD_TOKEN);
+discordClient.login(process.env.DISCORD_TOKEN);
 
 discordClient.on("ready", async () => {
   console.log(`Logged in as ${discordClient.user!.tag}!`);
