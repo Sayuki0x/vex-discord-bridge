@@ -71,6 +71,10 @@ const discordClient: DiscordClient = new DiscordClient();
 
 discordClient.login(process.env.DISCORD_TOKEN);
 
+discordClient.on("disconnect", () => {
+  process.exit(1);
+});
+
 discordClient.on("ready", async () => {
   console.log(`Logged in as ${discordClient.user!.tag}!`);
   const guild: any = await discordClient.guilds.resolve("579913226129637376");
