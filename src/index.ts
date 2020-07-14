@@ -27,7 +27,7 @@ function getURLFromMarkdown(markdown: string) {
   return url.slice(0, url.length - 1);
 }
 
-vexClient.on("message", async (message) => {
+/* vexClient.on("message", async (message) => {
   if (message.message.match(markdownImageRegex)) {
     const matches = message.message.match(markdownImageRegex);
     if (matches) {
@@ -54,7 +54,7 @@ vexClient.on("message", async (message) => {
     }
     // await guildMember.setNickname("MarketTalk");
   }
-});
+}); */
 
 const discordClient: DiscordClient = new DiscordClient();
 
@@ -66,10 +66,46 @@ discordClient.on("ready", async () => {
   guildMember = await guild.members.resolve((discordClient as any).user.id);
 });
 
+const emojiRegex = /<:\S+:\d{18}>/g;
+
+const getEmojiID = (emojiString: string) => {
+  return [
+    emojiString.split(":")[1],
+    emojiString.split(":")[2].slice(0, emojiString.split(":")[2].length - 1),
+  ];
+};
+
 discordClient.on("message", async (msg: Message) => {
   if (msg.channel.id === process.env.DISCORD_CHANNEL_ID) {
     let attachment = "";
     if (msg.author.id !== process.env.DISCORD_USER_ID) {
+      const emojiMatches = msg.content.match(emojiRegex);
+
+      if (emojiMatches) {
+        for (const emojiString of emojiMatches) {
+          const [emojiName, emojiID] = getEmojiID(emojiString);
+          console.log(emojiID);
+
+          const emoji = await discordClient.emojis.resolve(emojiID);
+
+          if (emoji) {
+            console.log(emoji.url);
+            const res = await ax.get(emoji.url!, {
+              responseType: "arraybuffer",
+            });
+            const fileInfo = await vexClient.files.create(
+              res.data,
+              emojiName,
+              process.env.VEX_CHANNEL_ID!
+            );
+
+            // markdown formatted link
+            const emojiFile = `![${fileInfo.url}](${fileInfo.url})`;
+            msg.content = msg.content.replace(emojiString, emojiFile);
+          }
+        }
+      }
+
       if (msg.attachments.first()) {
         const name = msg.attachments.first()?.name;
         const url = msg.attachments.first()?.url;
@@ -77,7 +113,7 @@ discordClient.on("message", async (msg: Message) => {
         const res = await ax.get(url!, { responseType: "arraybuffer" });
         const fileInfo = await vexClient.files.create(
           res.data,
-          "untitled",
+          name || "untitled",
           process.env.VEX_CHANNEL_ID!
         );
 
