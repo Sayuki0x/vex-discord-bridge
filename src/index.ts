@@ -1,10 +1,5 @@
-import {
-  Client as DiscordClient,
-  Guild,
-  GuildMember,
-  Message,
-  MessageFlags,
-} from "discord.js";
+import ax from "axios";
+import { Client as DiscordClient, Message } from "discord.js";
 import { Client as VexClient, KeyRing } from "libvex";
 import { loadEnv } from "./utils/loadEnv";
 
@@ -36,8 +31,6 @@ vexClient.on("message", async (message) => {
   if (message.message.match(markdownImageRegex)) {
     const matches = message.message.match(markdownImageRegex);
     if (matches) {
-      console.log(matches[0]);
-      console.log(getURLFromMarkdown(matches[0]));
       message.message = message.message.replace(
         matches[0],
         getURLFromMarkdown(matches[0])
@@ -81,8 +74,15 @@ discordClient.on("message", async (msg: Message) => {
         const name = msg.attachments.first()?.name;
         const url = msg.attachments.first()?.url;
 
+        const res = await ax.get(url!, { responseType: "arraybuffer" });
+        const fileInfo = await vexClient.files.create(
+          res.data,
+          "untitled",
+          process.env.VEX_CHANNEL_ID!
+        );
+
         // markdown formatted link
-        attachment = ` [${name || url}](${url})`;
+        attachment = `![${name || fileInfo.url}](${fileInfo.url})`;
       }
 
       try {

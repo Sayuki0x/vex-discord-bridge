@@ -33,6 +33,7 @@
     }
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "electron-log": "^4.1.1",
