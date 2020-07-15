@@ -134,7 +134,10 @@ discordClient.on("message", async (msg: Message) => {
             const emojiFile = `![emoji-${emojiName}](${fileInfo.url})`;
             msg.content = msg.content.replace(emojiString, emojiFile);
           } else {
-            msg.content.replace(emojiString, emojiList[emojiName]);
+            msg.content.replace(
+              emojiString,
+              `![emoji-${emojiName}](${emojiList[emojiName]})`
+            );
           }
         }
       }
