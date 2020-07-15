@@ -95,7 +95,7 @@ discordClient.on("ready", async () => {
   guildMember = await guild.members.resolve((discordClient as any).user.id);
 });
 
-const emojiRegex = /<:\S+:\d{18}>/g;
+const emojiRegex = /<a?:\S+:\d{18}>/g;
 
 const getEmojiID = (emojiString: string) => {
   return [
