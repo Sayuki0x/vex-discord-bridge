@@ -38,6 +38,10 @@ function getURLFromMarkdown(markdown: string) {
   return url.slice(0, url.length - 1);
 }
 
+vexClient.on("dead_ping", () => {
+  process.exit(1);
+});
+
 vexClient.on("message", async (message) => {
   if (message.message.match(markdownImageRegex)) {
     const matches = message.message.match(markdownImageRegex);
