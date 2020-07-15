@@ -16,8 +16,6 @@ const emojiList = JSON.parse(
   fs.readFileSync("./emojis.json", { encoding: "utf8" })
 );
 
-console.log(emojiList);
-
 loadEnv();
 
 const keyring = new KeyRing("./keys");
@@ -133,7 +131,7 @@ discordClient.on("message", async (msg: Message) => {
             emojiList[emojiName] = fileInfo.url;
             fs.writeFileSync(
               "./emojis.json",
-              JSON.stringify(emojiList, null, 4)
+              JSON.stringify(emojiList, Object.keys(emojiList).sort(), 4)
             );
             console.log("Saved new emoji " + emojiName + " at " + fileInfo.url);
             const emojiFile = `![emoji-${emojiName}](${fileInfo.url})`;
