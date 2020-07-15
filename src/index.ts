@@ -113,23 +113,29 @@ discordClient.on("message", async (msg: Message) => {
       if (emojiMatches) {
         for (const emojiString of emojiMatches) {
           const [emojiName, emojiID] = getEmojiID(emojiString);
-          const res = await ax.get(
-            `https://cdn.discordapp.com/emojis/${emojiID}`,
-            { responseType: "arraybuffer" }
-          );
-          const fileInfo = await vexClient.files.create(
-            res.data,
-            emojiName,
-            process.env.VEX_CHANNEL_ID!
-          );
 
-          emojiList[emojiName] = fileInfo.url;
-          fs.writeFileSync("./emojis.json", JSON.stringify(emojiList, null, 4));
+          if (!emojiList[emojiName]) {
+            const res = await ax.get(
+              `https://cdn.discordapp.com/emojis/${emojiID}`,
+              { responseType: "arraybuffer" }
+            );
+            const fileInfo = await vexClient.files.create(
+              res.data,
+              emojiName,
+              process.env.VEX_CHANNEL_ID!
+            );
 
-          console.log("Saved new emoji " + emojiName + " at " + fileInfo.url);
-
-          const emojiFile = `![emoji-${emojiName}](${fileInfo.url})`;
-          msg.content = msg.content.replace(emojiString, emojiFile);
+            emojiList[emojiName] = fileInfo.url;
+            fs.writeFileSync(
+              "./emojis.json",
+              JSON.stringify(emojiList, null, 4)
+            );
+            console.log("Saved new emoji " + emojiName + " at " + fileInfo.url);
+            const emojiFile = `![emoji-${emojiName}](${fileInfo.url})`;
+            msg.content = msg.content.replace(emojiString, emojiFile);
+          } else {
+            msg.content.replace(emojiString, emojiList[emojiName]);
+          }
         }
       }
 
