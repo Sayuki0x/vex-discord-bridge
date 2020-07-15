@@ -1,5 +1,9 @@
 import ax from "axios";
-import { Client as DiscordClient, Message } from "discord.js";
+import {
+  Client as DiscordClient,
+  Message,
+  SystemChannelFlags,
+} from "discord.js";
 import fs from "fs";
 import { Client as VexClient, KeyRing } from "libvex";
 import { loadEnv } from "./utils/loadEnv";
@@ -50,6 +54,7 @@ vexClient.on("disconnect", (code) => {
 
 vexClient.on("dead_ping", () => {
   console.log("The vex ping message between us and the server is dead.");
+  process.exit(1);
 });
 
 vexClient.on("message", async (message) => {
