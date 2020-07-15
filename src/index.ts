@@ -90,6 +90,9 @@ discordClient.on("disconnect", () => {
 
 discordClient.on("ready", async () => {
   console.log(`Logged in as ${discordClient.user!.tag}!`);
+
+  await discordClient.user?.setStatus("invisible");
+
   const guild: any = await discordClient.guilds.resolve("579913226129637376");
   guildMember = await guild.members.resolve((discordClient as any).user.id);
 });
