@@ -38,8 +38,18 @@ function getURLFromMarkdown(markdown: string) {
   return url.slice(0, url.length - 1);
 }
 
+vexClient.on("reconnect", (count) => {
+  console.log(
+    "The vex client re-established connection. Reconnects: " + count.toString()
+  );
+});
+
+vexClient.on("disconnect", (code) => {
+  console.log("The vex client disconnected with close code " + code.toString());
+});
+
 vexClient.on("dead_ping", () => {
-  process.exit(1);
+  console.log("The vex ping message between us and the server is dead.");
 });
 
 vexClient.on("message", async (message) => {
@@ -76,7 +86,7 @@ const discordClient: DiscordClient = new DiscordClient();
 discordClient.login(process.env.DISCORD_TOKEN);
 
 discordClient.on("disconnect", () => {
-  process.exit(1);
+  console.log("The discord client disconnected.");
 });
 
 discordClient.on("ready", async () => {
