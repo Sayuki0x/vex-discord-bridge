@@ -1,9 +1,5 @@
 import ax from "axios";
-import {
-  Client as DiscordClient,
-  Message,
-  SystemChannelFlags,
-} from "discord.js";
+import { Client as DiscordClient, Message } from "discord.js";
 import fs from "fs";
 import { Client as VexClient, IChatMessage, KeyRing } from "libvex";
 import { loadEnv } from "./utils/loadEnv";
@@ -164,7 +160,6 @@ discordClient.on("message", async (msg: Message) => {
         process.env.VEX_CHANNEL_ID!,
         msg.content + (attachment ? "\n" + attachment : "")
       );
-      await vexClient.users.nick(username);
     }
   }
 });
