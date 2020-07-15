@@ -138,6 +138,8 @@ discordClient.on("message", async (msg: Message) => {
                 JSON.stringify(emojiList, null, 4)
               );
 
+              console.log("Saved new emoji " + emojiName);
+
               // markdown formatted link
               const emojiFile = `![emoji-${emojiName}](${fileInfo.url})`;
               msg.content = msg.content.replace(emojiString, emojiFile);
