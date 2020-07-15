@@ -5,7 +5,7 @@ import {
   SystemChannelFlags,
 } from "discord.js";
 import fs from "fs";
-import { Client as VexClient, KeyRing } from "libvex";
+import { Client as VexClient, IChatMessage, KeyRing } from "libvex";
 import { loadEnv } from "./utils/loadEnv";
 
 if (!fs.existsSync("./emojis.json")) {
@@ -161,17 +161,11 @@ discordClient.on("message", async (msg: Message) => {
         attachment = `![${name || fileInfo.url}](${fileInfo.url})`;
       }
 
-      try {
-        await vexClient.users.nick(msg.author.username);
-      } catch (err) {
-        console.warn(err);
-      }
-
+      await vexClient.users.nick(msg.author.username);
       await vexClient.messages.send(
         process.env.VEX_CHANNEL_ID!,
         msg.content + (attachment ? "\n" + attachment : "")
       );
-
       await vexClient.users.nick(username);
     }
   }
