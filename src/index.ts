@@ -15,7 +15,7 @@ const emojiList = JSON.parse(
 loadEnv();
 
 const keyring = new KeyRing("./keys");
-const vexClient = new VexClient(process.env.VEX_SERVER!, keyring, null);
+const vexClient = new VexClient(process.env.VEX_SERVER!, keyring, null, false);
 const username = "BridgeBot";
 
 const markdownImageRegex = /!\[.*?\]\((.*?)\)/g;
@@ -24,11 +24,15 @@ let guildMember: any;
 
 vexClient.on("ready", async () => {
   await vexClient.register();
-  vexClient.auth();
+  await vexClient.auth();
 });
 
 vexClient.on("authed", async () => {
-  vexClient.channels.join(process.env.VEX_CHANNEL_ID!);
+  await vexClient.channels.join(process.env.VEX_CHANNEL_ID!);
+  await vexClient.users.update({
+    color: "hsl(0, 0%, 71%)",
+    userID: vexClient.user?.userID,
+  } as any);
 });
 
 function getURLFromMarkdown(markdown: string) {
@@ -69,7 +73,7 @@ vexClient.on("message", async (message) => {
     return;
   }
 
-  if (message.userID !== vexClient.info().client?.userID) {
+  if (message.userID !== vexClient.user?.userID) {
     // await guildMember.setNickname(message.username);
     if (channel) {
       await (channel as any).send(
