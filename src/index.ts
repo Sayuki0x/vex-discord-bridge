@@ -1,7 +1,7 @@
 import ax from "axios";
 import { Client as DiscordClient, Message } from "discord.js";
 import fs from "fs";
-import { Client as VexClient, IChatMessage, KeyRing } from "libvex";
+import { Client as VexClient, KeyRing } from "libvex";
 import { loadEnv } from "./utils/loadEnv";
 
 if (!fs.existsSync("./emojis.json")) {
@@ -15,7 +15,7 @@ const emojiList = JSON.parse(
 loadEnv();
 
 const keyring = new KeyRing("./keys");
-const vexClient = new VexClient(process.env.VEX_SERVER!, keyring, null, false);
+const vexClient = new VexClient(process.env.VEX_SERVER!, keyring, null, true);
 const username = "BridgeBot";
 
 const markdownImageRegex = /!\[.*?\]\((.*?)\)/g;
@@ -40,14 +40,9 @@ function getURLFromMarkdown(markdown: string) {
   return url.slice(0, url.length - 1);
 }
 
-vexClient.on("reconnect", (count) => {
-  console.log(
-    "The vex client re-established connection. Reconnects: " + count.toString()
-  );
-});
-
 vexClient.on("disconnect", (code) => {
   console.log("The vex client disconnected with close code " + code.toString());
+  process.exit(1);
 });
 
 vexClient.on("dead_ping", () => {
@@ -74,13 +69,11 @@ vexClient.on("message", async (message) => {
   }
 
   if (message.userID !== vexClient.user?.userID) {
-    // await guildMember.setNickname(message.username);
     if (channel) {
       await (channel as any).send(
         "**" + message.username + "**: " + message.message
       );
     }
-    // await guildMember.setNickname("MarketTalk");
   }
 });
 
@@ -90,6 +83,7 @@ discordClient.login(process.env.DISCORD_TOKEN);
 
 discordClient.on("disconnect", () => {
   console.log("The discord client disconnected.");
+  process.exit(1);
 });
 
 discordClient.on("ready", async () => {
