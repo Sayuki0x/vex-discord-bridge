@@ -12,11 +12,11 @@ All of your typescript files should go in the `./src` directory, and the compile
 
 ## Setup
 
-- Install the dependencies
+-   Install the dependencies
 
 `yarn`
 
-- Start the project. Typescript will be compiled automatically.
+-   Start the project. Typescript will be compiled automatically.
 
 `yarn start`
 
