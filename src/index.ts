@@ -127,46 +127,54 @@ async function main() {
     discordClient.on("message", async (msg: Message) => {
         if (msg.channel.id === process.env.DISCORD_CHANNEL_ID) {
             if (msg.author.id !== process.env.DISCORD_USER_ID) {
-                // const emojiMatches = msg.content.match(emojiRegex);
+                const emojiMatches = msg.content.match(emojiRegex);
 
-                // if (emojiMatches) {
-                //   for (const emojiString of emojiMatches) {
-                //     const [emojiName, emojiID] = getEmojiID(emojiString);
-                //     const res = await ax.get(
-                //         `https://cdn.discordapp.com/emojis/${emojiID}`,
-                //         { responseType: "arraybuffer" }
-                //       );
-                //       const [fileInfo, key] = await vexClient.files.create(
-                //         res.data
-                //       );
-                //       const type = await FileType.fromBuffer(res.data);
-                //       await vexClient.messages.group(VEX_CHANNEL_ID!, fileToString(emojiName, fileInfo, key, type?.mime || "image"))
-                //   }
-                // }
+                if (emojiMatches) {
+                    for (const emojiString of emojiMatches) {
+                        const [emojiName, emojiID] = getEmojiID(emojiString);
+                        const res = await ax.get(
+                            `https://cdn.discordapp.com/emojis/${emojiID}`,
+                            { responseType: "arraybuffer" }
+                        );
+                        const [fileInfo, key] = await vexClient.files.create(
+                            res.data
+                        );
+                        const type = await FileType.fromBuffer(res.data);
+                        await vexClient.messages.group(
+                            VEX_CHANNEL_ID!,
+                            fileToString(
+                                emojiName,
+                                fileInfo,
+                                key,
+                                type?.mime || "image"
+                            )
+                        );
+                    }
+                }
 
-                // if (msg.attachments.first()) {
-                //     const name = msg.attachments.first()?.name;
-                //     const url = msg.attachments.first()?.url;
+                if (msg.attachments.first()) {
+                    const name = msg.attachments.first()?.name;
+                    const url = msg.attachments.first()?.url;
 
-                //     const res = await ax.get(url!, {
-                //         responseType: "arraybuffer",
-                //     });
-                //     const [details, key] = await vexClient.files.create(
-                //         res.data
-                //     );
+                    const res = await ax.get(url!, {
+                        responseType: "arraybuffer",
+                    });
+                    const [details, key] = await vexClient.files.create(
+                        res.data
+                    );
 
-                //     const attachmentType = await FileType.fromBuffer(res.data);
-                //     // markdown formatted link
-                //     vexClient.messages.group(
-                //         VEX_CHANNEL_ID!,
-                //         fileToString(
-                //             name || "file",
-                //             details,
-                //             key,
-                //             attachmentType?.mime || "unknown"
-                //         )
-                //     );
-                // }
+                    const attachmentType = await FileType.fromBuffer(res.data);
+                    // markdown formatted link
+                    vexClient.messages.group(
+                        VEX_CHANNEL_ID!,
+                        fileToString(
+                            name || "file",
+                            details,
+                            key,
+                            attachmentType?.mime || "unknown"
+                        )
+                    );
+                }
 
                 vexClient.messages.group(
                     VEX_CHANNEL_ID!,
