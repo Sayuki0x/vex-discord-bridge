@@ -57,6 +57,10 @@ async function main() {
     });
 
     vexClient.on("message", async (message) => {
+        if (message.group !== process.env.VEX_CHANNEL_ID) {
+            return;
+        }
+
         const channel = discordClient.channels.cache.get(
             process.env.DISCORD_CHANNEL_ID!
         );
