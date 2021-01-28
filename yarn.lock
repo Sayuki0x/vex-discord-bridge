@@ -268,10 +268,10 @@
     ts-jest "^26.4.4"
     tweetnacl "^1.0.3"
 
-"@vex-chat/libvex@^0.18.15":
-  version "0.18.15"
-  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.18.15.tgz#16c05d08ea4e2e93be0168db8870ec2694152eb1"
-  integrity sha512-dFFKN97nOuGWDxI6I2I+H622BNkEXnk70dazl/uacSlpG0kTGsFUKQ54CZei0hqfCGoIQjWQa4yoYsxel7mvDg==
+"@vex-chat/libvex@^0.18.31":
+  version "0.18.32"
+  resolved "https://registry.yarnpkg.com/@vex-chat/libvex/-/libvex-0.18.32.tgz#b08e0970cfe03f971558c0c522b9d5b308c711ef"
+  integrity sha512-BIEDq+foiBNpbv7gCwkDu6WIbw6vdenxX/yBJtGQB9bJDjB1UoWjb+prp3MC3c9IY6autBxpyWkgDWlETMtDvg==
   dependencies:
     "@extrahash/sleep" "^1.0.0"
     "@types/create-hmac" "^1.1.0"
@@ -280,12 +280,13 @@
     "@types/uuid" "^8.3.0"
     "@types/ws" "^7.4.0"
     "@vex-chat/crypto" "^0.7.13"
-    "@vex-chat/types" "^0.10.12"
+    "@vex-chat/types" "^0.10.15"
     axios "^0.21.0"
     chalk "^4.1.0"
     knex "^0.21.15"
     lodash "^4.17.20"
     msgpack-lite "^0.1.26"
+    parse-duration "^0.4.4"
     sqlite3 "^5.0.0"
     tweetnacl "^1.0.3"
     uuid "^8.3.1"
@@ -296,6 +297,13 @@
   version "0.10.12"
   resolved "https://registry.yarnpkg.com/@vex-chat/types/-/types-0.10.12.tgz#b3f8bf815d33927e2368bfd9250f947c26068372"
   integrity sha512-L0WVKB2HczOVomJl0Z2dwM7yxkIiZTtfRTkXaZ52+y+jWlvtUj60AIzizz+uso+tFLb88mhS0ii7OizbsbGLIw==
+  dependencies:
+    tweetnacl "^1.0.3"
+
+"@vex-chat/types@^0.10.15":
+  version "0.10.15"
+  resolved "https://registry.yarnpkg.com/@vex-chat/types/-/types-0.10.15.tgz#93e411435d494db525d5fa7e372b5d24518bfc4e"
+  integrity sha512-iYAHgrYfA/2LGcLtdpnoVVF8t7XsF8IISq3bFNS7q+3l+NM953rUcVrOEVnv9WnyAHGgLcok4yOW8LN8Yc+aJA==
   dependencies:
     tweetnacl "^1.0.3"
 
@@ -2666,6 +2674,11 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
+
+parse-duration@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/parse-duration/-/parse-duration-0.4.4.tgz#11c0f51a689e97d06c57bd772f7fda7dc013243c"
+  integrity sha512-KbAJuYGUhZkB9gotDiKLnZ7Z3VTacK3fgwmDdB6ZVDtJbMBT6MfLga0WJaYpPDu0mzqT0NgHtHDt5PY4l0nidg==
 
 parse-filepath@^1.0.1:
   version "1.0.2"

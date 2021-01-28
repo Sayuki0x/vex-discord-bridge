@@ -32,7 +32,10 @@ export const {
 main();
 
 async function main() {
-    const vexClient = await VexClient.create(PK!);
+    const vexClient = await VexClient.create(PK!, { logLevel: "info" });
+    // tslint:disable-next-line: no-string-literal
+    vexClient["conn"].setMaxListeners(30);
+
     const username = "BridgeBot";
 
     let guildMember: any;
@@ -42,6 +45,7 @@ async function main() {
     const err2 = await vexClient.login(username, PW!);
     if (err2) {
         console.error(err2.toString());
+        process.exit(1);
     }
 
     let emojiList: XTypes.SQL.IEmoji[] = await vexClient.emoji.retrieveList();
@@ -64,25 +68,14 @@ async function main() {
         return null;
     };
 
-    // fs.readdir("./emojis", (err, files) => {
-    //     for (const filePath of files) {
-    //         const emojiName = filePath.split("-").shift();
-    //         if (!emojiName || containsEmoji(emojiName)) {
-    //             continue;
-    //         }
-    //         const buf = fs.readFile("./emojis/"+filePath,  (err, buf) => {
-    //             if (err) {
-    //                 console.warn(err.toString());
-    //                 return;
-    //             }
-    //             vexClient.emoji.create(buf, emojiName);
-    //         })
-    //     }
-    // })
-
     log.info(vexClient.me.user());
 
-    await vexClient.connect();
+    try {
+        await vexClient.connect();
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
 
     function getURLFromMarkdown(markdown: string) {
         const url = markdown.split("(")[1];
@@ -96,11 +89,6 @@ async function main() {
 
     vexClient.on("message", async (message) => {
         if (message.group !== process.env.VEX_CHANNEL_ID) {
-            return;
-        }
-
-        // don't echo the bot
-        if (message.authorID === "32f01b3c-0424-46eb-a3c1-c4ec9fb5fcf9") {
             return;
         }
 
@@ -203,7 +191,8 @@ async function main() {
                                 emojiName
                             );
                             if (!emoji) {
-                                throw new Error("Couldn't create emoji!");
+                                log.warn("Couldn't create emoji!");
+                                return;
                             }
                             emojiList = await vexClient.emoji.retrieveList();
                             message = message.replace(
@@ -213,7 +202,8 @@ async function main() {
                         } else {
                             const emoji = getEmoji(emojiName);
                             if (!emoji) {
-                                throw new Error("Couldn't fetch emoji!");
+                                log.warn("Couldn't fetch emoji!");
+                                return;
                             }
                             message = message.replace(
                                 emojiString,
