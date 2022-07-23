@@ -40,7 +40,7 @@
         "discord.js": "^12.2.0",
         "dotenv": "^8.2.0",
         "electron-log": "^4.1.1",
-        "file-type": "^16.2.0"
+        "file-type": "^16.5.4"
     },
     "repository": "git@github.com:vex-chat/vex-discord-bridge"
 }
